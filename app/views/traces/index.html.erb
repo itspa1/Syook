@@ -1,0 +1,34 @@
+<div id="table">
+<ul>
+<% @cards.each do |card| %>
+	<% res = Trace.where('card_id = ?',card) %>
+	<% if res.length > 3 %>
+		<% top_three = res.sort.slice(-3,res.length) %>
+		<% sum = 0 %>
+		<% top_three.each{ |a| sum += a.strength} %>
+		<li>AVG OF <%= card %> = <%= sum/3 %></li>
+	<% else %>
+		<% top_three = res %>
+		<% sum = 0 %>
+		<% if top_three.length == 1 %>
+		<li>AVG OF <%= card %> = <% top_three.each{ |a| sum += a.strength} %><%=sum %></li>
+		<% elsif top_three.length == 2 %>
+		<% top_three.each{ |a| sum += a.strength} %>
+		<li>AVG OF <%= card %> = <%= sum/2 %></li>
+		<% else %>
+		<% top_three.each{ |a| sum += a.strength} %>
+		<li>AVG OF <%= card %> = <%= sum/3 %></li>
+		<% end %>
+	<% end %> 
+<% end %>
+</ul>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		setInterval(function(){
+		$.get("/traces/reload_page")
+		console.log("done");	
+		},10000);
+	})
+</script>
